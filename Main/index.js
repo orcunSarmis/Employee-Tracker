@@ -1,47 +1,53 @@
 // Setting dependencies
-const express = require('express');
 //  Import and require mysql2
 const mysql2 = require('mysql2');
 const inquire = require('inquire');
 // Import and require console.table
 const consoleTable = require('console.table');
-const Connection = require('mysql2/typings/mysql/lib/Connection');
+const db = require('../Main/connection');
 
-const PORT = process.env.PORT || 3001;
-const app = express();
 
-// Express iddleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
-// Connect to database
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        // MySQL username
-        user: 'root',
-        // MySQL password
-        password: '',
-        database: 'employees'
-    },
-    console.log(`Connected to the database.`)
-);
+// connection.connect((err) => {
+//     if (err) throw err;
+//     mainMenu();
+// });
 
-Connection.connect((err) => {
-    if (err) throw err;
-    ();
-});
-
-const = () => {
+const mainMenu = () => {
     inquirer.propmt([
         {
-            name: '',
-            type: '',
-            message: '',
-
+            name: 'choices',
+            type: 'list',
+            message: 'What would you like to do?',
+            choices: [
+                'View All Employees',
+                'View All Employees By Department',
+                'View All Employees By Manager',
+                'Add Employee',
+                'Remove Employee',
+                'Update Employee Role',
+                'Update Employee Manager',
+                'View All Roles',
+                'Add Role',
+                'Remove Role',
+                'View All Departments',
+                'Add Department',
+                'Remove Department',
+                'View The Total Utilized Budget By Department',
+                'Quiet'
+            ]
         }
-    ])
-}
+    ]);
+};
+
+
+
+
+
+
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Server on port ${PORT}`);
