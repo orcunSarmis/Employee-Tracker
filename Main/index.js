@@ -93,12 +93,11 @@ const viewAllEmployees = () => {
     //     type: `input`,
     //     message: `All Employee`,
     // }).then((answer) => {
-        console.log(1);
     const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS 'department', 
-    role.salary, manager_id.employee FROM employee, role, department`;
+    role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id 
+    LEFT JOIN department ON role.department_id = department_id LEFT JOIN employee manager ON manager.id = employee.manager_id`;
     db.query(query, (err, res) => {
         if (err) throw err;
-        // console.log(2);
         console.table(res);
     });
     // mainMenu();
