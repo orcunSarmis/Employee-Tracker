@@ -88,13 +88,21 @@ const mainMenu = () => {
     ]);
 };
 
-
-
-
-
-
-
-
+const viewAllEmployees = () => {
+    inquire
+    .propmt({
+        name: `employee`,
+        type: `input`,
+        message: `All Employee`,
+    }).then((answer) => {
+        const query = `SELECT * FROM employee`;
+        db.query(query, (err, res) => {
+            if (err) throw err;
+            console.log(res);
+        });
+        mainMenu();
+    });
+};
 
 
 app.listen(PORT, () => {
