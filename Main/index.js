@@ -1,7 +1,7 @@
 // Setting dependencies
 //  Import and require mysql2
-const mysql2 = require('mysql2');
-const inquire = require('inquire');
+const mysql = require('mysql2');
+const inquirer = require('inquirer');
 // Import and require console.table
 const consoleTable = require('console.table');
 const db = require('../Main/connection');
@@ -105,6 +105,3 @@ const viewAllEmployees = () => {
 };
 
 
-app.listen(PORT, () => {
-    console.log(`Server on port ${PORT}`);
-});
