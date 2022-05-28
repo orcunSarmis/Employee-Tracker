@@ -2,6 +2,9 @@
 //  Import and require mysql2
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+// import chalk from 'chalk';
+const figlet = require('figlet');
+// const chalk = require('chalk');
 // Import and require console.table
 const consoleTable = require('console.table');
 const db = require('../Main/connection');
@@ -93,16 +96,24 @@ const viewAllEmployees = () => {
     //     type: `input`,
     //     message: `All Employee`,
     // }).then((answer) => {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS 'department', 
+    const query = `SELECT DISTINCT employee.id, employee.first_name, employee.last_name, role.title, department.name AS 'department', 
     role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id 
     LEFT JOIN department ON role.department_id = department_id LEFT JOIN employee manager ON manager.id = employee.manager_id`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
+    //     console.log(chalk.yellow.bold(`====================================================================================`));
+    //     console.log(`                              ` + chalk.green.bold(`Current Employees:`));
+    //     console.log(chalk.yellow.bold(`====================================================================================`));
+    //     console.table(res);
+    //     console.log(chalk.yellow.bold(`====================================================================================`));
     });
     // mainMenu();
     // });
 };
 
 mainMenu();
+
+// View All Employees By Department Function
+// viewAllEmployeesByDepartment()
 
