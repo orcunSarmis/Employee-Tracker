@@ -8,10 +8,7 @@ const db = require('../Main/connection');
 
 
 
-// connection.connect((err) => {
-//     if (err) throw err;
-//     mainMenu();
-// });
+
 
 const mainMenu = () => {
     inquirer.prompt(
@@ -88,6 +85,7 @@ const mainMenu = () => {
     // ]);
 };
 
+// View All Employees Function
 const viewAllEmployees = () => {
     // inquirer
     // .prompt({
@@ -96,7 +94,8 @@ const viewAllEmployees = () => {
     //     message: `All Employee`,
     // }).then((answer) => {
         console.log(1);
-    const query = `SELECT * FROM employee`;
+    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS 'department', 
+    role.salary, manager_id.employee FROM employee, role, department`;
     db.query(query, (err, res) => {
         if (err) throw err;
         // console.log(2);

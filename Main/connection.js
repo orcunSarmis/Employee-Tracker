@@ -12,5 +12,20 @@ const db = mysql.createConnection(
     },
     console.log(`Connected to the employees_db database.`)
 );
+//     connection.connect((err) => {
+//     if (err) throw error;
+//     console.log(`Connected to the employees_db database.`);
+
+//     console.log(chalk.yellow.bold(`====================================================================================`));
+//     console.log(``);
+//     console.log(chalk.greenBright.bold(figlet.textSync('Employee Tracker')));
+//     console.log(``);
+//     console.log(`                                                          ` + chalk.greenBright.bold('Created By: Orcun Sarmis'));
+//     console.log(``);
+//     console.log(chalk.yellow.bold(`====================================================================================`));
+//     mainMenu();
+// }));
+
+
 
 module.exports = db;
