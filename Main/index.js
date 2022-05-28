@@ -14,7 +14,7 @@ const db = require('../Main/connection');
 // });
 
 const mainMenu = () => {
-    inquirer.propmt([
+    inquirer.prompt(
         {
             name: 'choices',
             type: 'list',
@@ -36,7 +36,7 @@ const mainMenu = () => {
                 'View The Total Utilized Budget By Department',
                 'Quiet'
             ]
-        }.then((answer) => {
+        }).then((answer) => {
             switch(answer.choices) {
                 case `View All Employees`:
                     viewAllEmployees();
@@ -51,7 +51,7 @@ const mainMenu = () => {
                     addEmployee();
                     break;
                 case `Remove Employee`:
-                    emoveEmployee();
+                    removeEmployee();
                     break;
                 case `Update Employee Role`:
                     updateEmployeeRole();
@@ -85,23 +85,26 @@ const mainMenu = () => {
                     break;
             }
         })
-    ]);
+    // ]);
 };
 
 const viewAllEmployees = () => {
-    inquire
-    .propmt({
-        name: `employee`,
-        type: `input`,
-        message: `All Employee`,
-    }).then((answer) => {
-        const query = `SELECT * FROM employee`;
-        db.query(query, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-        });
-        mainMenu();
+    // inquirer
+    // .prompt({
+    //     name: `employee`,
+    //     type: `input`,
+    //     message: `All Employee`,
+    // }).then((answer) => {
+        console.log(1);
+    const query = `SELECT * FROM employee`;
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        // console.log(2);
+        console.table(res);
     });
+    // mainMenu();
+    // });
 };
 
+mainMenu();
 
