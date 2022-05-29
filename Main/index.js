@@ -90,12 +90,8 @@ const mainMenu = () => {
 
 // View All Employees Function
 const viewAllEmployees = () => {
-    // inquirer
-    // .prompt({
-    //     name: `employee`,
-    //     type: `input`,
-    //     message: `All Employee`,
-    // }).then((answer) => {
+        console.log("\n");
+
     const query = `SELECT DISTINCT employee.id, employee.first_name, 
     employee.last_name, role.title, department.name AS 'department', 
     role.salary, CONCAT(manager.first_name, ' ', manager.last_name) 
@@ -105,6 +101,8 @@ const viewAllEmployees = () => {
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
+        console.log("\n");
+
         mainMenu();
         // console.log(chalk.yellow.bold(`====================================================================================`));
         // console.log(`                              ` + chalk.green.bold(`Current Employees:`));
@@ -117,15 +115,19 @@ const viewAllEmployees = () => {
 };
 
 // View All Employees By Department Function
-const viewAllEmployeesByDepartment = () => {
+const viewAllEmployeesByDepartment = () => { 
+    console.log("\n");
+
     const query = `SELECT employee.id, employee.first_name, 
     employee.last_name, department.name AS 'department'FROM employee 
     LEFT JOIN role on employee.role_id = role.id 
     LEFT JOIN department department on 
-    role.department_id = department.id WHERE department.id `;
+    role.department_id = department.id WHERE department.id`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
+        console.log("\n");
+
         mainMenu();
     });
 };
@@ -133,18 +135,44 @@ const viewAllEmployeesByDepartment = () => {
 
 // View All Employees By Manager Function
 const viewAllEmployeesByManager = () => {
+    const managers = viewAllEmployees();
+    console.log("\n");
+
+    const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+      }));
+
+    const { managerId } = prompt([
+        {
+        type: "list",
+        name: "managerId",
+        message: "Which employee do you want to see direct reports for?",
+        choices: managerChoices
+        }
+    ]);
+    // let managerId = 1;
     const query = `SELECT employee.id, employee.first_name, 
     employee.last_name, department.name AS department, 
     role.title FROM employee LEFT JOIN role on role.id = 
     employee.role_id LEFT JOIN department ON department.id = 
-    role.department_id WHERE manager_id`;
-    db.query(query, (err, res) => {
+    role.department_id WHERE manager_id = ?`;
+    db.query(query, managerId, (err, res) => {
         if (err) throw err;
         console.table(res);
+        console.log("\n");
+
         mainMenu();
     });
 };
 
+// Add Employee Function
+const addEmployee = () => {
+    console.log("\n");
+
+    const query = ``;
+    db.query(query, (err, res))
+}
 
 mainMenu();
 
@@ -168,3 +196,10 @@ mainMenu();
 //     LEFT JOIN employee e 
 //     on employee.manager_id = e.id
 //     ORDER BY Department
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // inquirer
+    // .prompt({
+    //     name: `employee`,
+    //     type: `input`,
+    //     message: `All Employee`,
+    // }).then((answer) => {
