@@ -172,10 +172,12 @@ const addEmployee = () => {
 
     const employee = inquirer.prompt([
         {
+            type: "input",
             name: "first_name",
             message: "What is the employee's first name?"
         },
         {
+            type: "input",
             name: "last_name",
             message: "What is the employee's last name?"
         }
@@ -187,7 +189,7 @@ const addEmployee = () => {
     }));
 
     const { roleId } = inquirer.prompt({
-        type: "input",
+        type: "list",
         name: "roleId",
         message: "What is the employee's role?",
         choices: roleChoices
@@ -218,10 +220,33 @@ const addEmployee = () => {
 
       mainMenu();
 
-// Remove Employee
+// Remove Employee Function
+const removeEmployee = () => {
+    console.log("\n");
 
+    const employees = db.findAllEmployees();
 
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+      }));
 
+    const { employeeId } = inquirer.prompt([
+    {
+        type: "list",
+        name: "employeeId",
+        message: "Which employee do you want to remove?",
+        choices: employeeChoices
+    }
+    ]); 
+
+     db.removeEmployee(employeeId);
+
+    console.log("Removed employee from the database");
+
+    mainMenu();
+
+}
 
 
 }
