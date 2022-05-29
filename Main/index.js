@@ -96,9 +96,12 @@ const viewAllEmployees = () => {
     //     type: `input`,
     //     message: `All Employee`,
     // }).then((answer) => {
-    const query = `SELECT DISTINCT employee.id, employee.first_name, employee.last_name, role.title, department.name AS 'department', 
-    role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id 
-    LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id`;
+    const query = `SELECT DISTINCT employee.id, employee.first_name, 
+    employee.last_name, role.title, department.name AS 'department', 
+    role.salary, CONCAT(manager.first_name, ' ', manager.last_name) 
+    AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id 
+    LEFT JOIN department ON role.department_id = department.id 
+    LEFT JOIN employee manager ON manager.id = employee.manager_id`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -113,34 +116,45 @@ const viewAllEmployees = () => {
     // });
 };
 
-
-
 // View All Employees By Department Function
 const viewAllEmployeesByDepartment = () => {
-    const query = `        SELECT 
-    employee.first_name AS First, 
-    employee.last_name AS Last, 
-    role.title AS Title, 
-    role.salary AS Salary, 
-    department.name AS Department, 
-    CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee 
-    INNER JOIN role on role.id = employee.role_id 
-    INNER JOIN department 
-    on department.id = role.department_id 
-    LEFT JOIN employee e 
-    on employee.manager_id = e.id
-    ORDER BY Department`;
+    const query = `SELECT employee.id, employee.first_name, 
+    employee.last_name, role.title AS 'department'FROM employee 
+    LEFT JOIN role on employee.role_id = role.id 
+    LEFT JOIN department department on 
+    role.department_id = department.id WHERE department.id `;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
         mainMenu();
     });
     // mainMenu();
+
+    // View All Employees By Manager Function
+    // const viewAllEmployeesByManager = () => {
+
+    // };
 };
 
 mainMenu();
 
-
+// _____________________________________________________________________________________
 // try for View All Employees By Department
 // SELECT department.id, department.name, SUM (role.salary) AS utilized_budget FROM employee LEFT JOIN 
 //     role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name
+
+
+// View All Employees By Department Same but not works well
+// SELECT 
+//     employee.first_name AS First, 
+//     employee.last_name AS Last, 
+//     role.title AS Title, 
+//     role.salary AS Salary, 
+//     department.name AS Department, 
+//     CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee 
+//     INNER JOIN role on role.id = employee.role_id 
+//     INNER JOIN department 
+//     on department.id = role.department_id 
+//     LEFT JOIN employee e 
+//     on employee.manager_id = e.id
+//     ORDER BY Department
