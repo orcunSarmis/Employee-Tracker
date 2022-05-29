@@ -143,7 +143,7 @@ const viewAllEmployeesByManager = () => {
         value: id
       }));
 
-    const { managerId } = prompt([
+    const { managerId } = inquirer.prompt([
         {
         type: "list",
         name: "managerId",
@@ -170,7 +170,7 @@ const viewAllEmployeesByManager = () => {
 const addEmployee = () => {
     console.log("\n");
 
-    const employee = prompt([
+    const employee = inquirer.prompt([
         {
             name: "first_name",
             message: "What is the employee's first name?"
@@ -186,8 +186,8 @@ const addEmployee = () => {
             value: id
     }));
 
-    const { roleId } = prompt({
-        type: "list",
+    const { roleId } = inquirer.prompt({
+        type: "input",
         name: "roleId",
         message: "What is the employee's role?",
         choices: roleChoices
@@ -201,8 +201,8 @@ const addEmployee = () => {
     }));
     managerChoices.unshift({ name: "None, value: null "});
 
-    const { managerId } = prompt({
-        type: "list",
+    const { managerId } = inquirer.prompt({
+        type: "input",
         name: "managerId",
         message: "Who is the employee's manager?",
         choices: managerChoices
