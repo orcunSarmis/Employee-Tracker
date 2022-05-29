@@ -119,7 +119,7 @@ const viewAllEmployees = () => {
 // View All Employees By Department Function
 const viewAllEmployeesByDepartment = () => {
     const query = `SELECT employee.id, employee.first_name, 
-    employee.last_name, role.title AS 'department'FROM employee 
+    employee.last_name, department.name AS 'department'FROM employee 
     LEFT JOIN role on employee.role_id = role.id 
     LEFT JOIN department department on 
     role.department_id = department.id WHERE department.id `;
@@ -128,13 +128,23 @@ const viewAllEmployeesByDepartment = () => {
         console.table(res);
         mainMenu();
     });
+};
     // mainMenu();
 
-    // View All Employees By Manager Function
-    // const viewAllEmployeesByManager = () => {
-
-    // };
+// View All Employees By Manager Function
+const viewAllEmployeesByManager = () => {
+    const query = `SELECT employee.id, employee.first_name, 
+    employee.last_name, department.name AS department, 
+    role.title FROM employee LEFT JOIN role on role.id = 
+    employee.role_id LEFT JOIN department ON department.id = 
+    role.department_id WHERE manager_id`;
+    db.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        mainMenu();
+    });
 };
+
 
 mainMenu();
 
