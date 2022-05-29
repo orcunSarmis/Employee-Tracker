@@ -116,13 +116,29 @@ const viewAllEmployees = () => {
 
 // View All Employees By Department Function
 const viewAllEmployeesByDepartment = () => {
-    const query = `SELECT department.id, department.name, SUM(role.salary) AS utilized_budget FROM employee LEFT JOIN 
-    role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name`;
+    const query = `        SELECT 
+    employee.first_name AS First, 
+    employee.last_name AS Last, 
+    role.title AS Title, 
+    role.salary AS Salary, 
+    department.name AS Department, 
+    CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee 
+    INNER JOIN role on role.id = employee.role_id 
+    INNER JOIN department 
+    on department.id = role.department_id 
+    LEFT JOIN employee e 
+    on employee.manager_id = e.id
+    ORDER BY Department`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
     });
+    // mainMenu();
 };
 
 mainMenu();
 
+
+
+// SELECT department.id, department.name, SUM (role.salary) AS utilized_budget FROM employee LEFT JOIN 
+//     role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name
