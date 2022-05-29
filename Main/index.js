@@ -102,6 +102,7 @@ const viewAllEmployees = () => {
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
+        mainMenu();
         // console.log(chalk.yellow.bold(`====================================================================================`));
         // console.log(`                              ` + chalk.green.bold(`Current Employees:`));
         // console.log(chalk.yellow.bold(`====================================================================================`));
@@ -132,6 +133,7 @@ const viewAllEmployeesByDepartment = () => {
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
+        mainMenu();
     });
     // mainMenu();
 };
@@ -139,6 +141,6 @@ const viewAllEmployeesByDepartment = () => {
 mainMenu();
 
 
-
+// try for View All Employees By Department
 // SELECT department.id, department.name, SUM (role.salary) AS utilized_budget FROM employee LEFT JOIN 
 //     role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name
