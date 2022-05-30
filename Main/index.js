@@ -11,6 +11,7 @@ const db = require('../Main/connection');
 
 
 const mainMenu = () => {
+  console.log("\n");
     inquirer.prompt(
         {
             name: 'choices',
@@ -278,11 +279,82 @@ const removeEmployee = () => {
 
 };
 
-// Update Employee Role Function
+// Update Employee's Role Function
 const updateEmployeeRole = () => {
+  console.log("\n");
    
+          let sql =       `SELECT employee.id, employee.first_name, employee.last_name, role.id AS "role_id"
+          FROM employee, role, department WHERE department.id = role.department_id AND role.id = employee.role_id`;
 
+          db.query(sql, (error, response) => {
+            if (error) throw error;
+            let employeeNamesArray = [];
+            response.forEach((employee) => {employeeNamesArray.push(`${employee.first_name} ${employee.last_name}`);});
 
+          let sql =     `SELECT role.id, role.title FROM role`;
+              db.query(sql, (error, response) => {
+              if (error) throw error;
+              let rolesArray = [];
+              response.forEach((role) => {rolesArray.push(role.title);});
+
+      inquirer
+        .prompt([
+        {
+        name: 'chosenEmployee',
+        type: 'list',
+        message: 'Which employee has a new role?',
+        choices: employeeNamesArray
+        },
+        {
+        name: 'chosenRole',
+        type: 'list',
+        message: 'What is their new role?',
+        choices: rolesArray
+        }
+        ])
+        .then((answer) => {
+        let newTitleId, employeeId;
+
+        response.forEach((role) => {
+            if (answer.chosenRole === role.title) {
+            newTitleId = role.id;
+            }
+        });
+
+        response.forEach((employee) => {
+            if (
+            answer.chosenEmployee ===
+            `${employee.first_name} ${employee.last_name}`
+            ) {
+            employeeId = employee.id;
+            }
+        });
+
+        let sqls =  `UPDATE employee SET employee.role_id = ? WHERE employee.id = ?`;
+        db.query(
+        sqls,
+        [newTitleId, employeeId],
+        (error) => {
+        if (error) throw error;
+        console.log(`Employee Role Updated`);
+        mainMenu();
+        // console.log(chalk.greenBright.bold(`====================================================================================`));
+        // console.log(chalk.greenBright(`Employee Role Updated`));
+        // console.log(chalk.greenBright.bold(`====================================================================================`));
+        
+        }
+        );
+      });
+    });
+  });
+
+  // Update Employee Manager Function
+  const updateEmployeeManager = () => {
+    console.log("\n");
+
+    
+  }
+  
 }
 
 mainMenu();
@@ -321,113 +393,7 @@ mainMenu();
 //     );
 //   }
 
-// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-// add employeefunc
-// const employee = inquirer.prompt([
-//     {
-//         type: "input",
-//         name: "first_name",
-//         message: "What is the employee's first name?"
-//     },
-//     {
-//         type: "input",
-//         name: "last_name",
-//         message: "What is the employee's last name?"
-//     }
-// ]);
 
-// const roleChoices = roles.map(({ id, title }) => ({
-//         name: title,
-//         value: id
-// }));
-
-// const { roleId } = inquirer.prompt({
-//     type: "list",
-//     name: "roleId",
-//     message: "What is the employee's role?",
-//     choices: roleChoices
-// });
-
-// employee.role_id = roleId;
-
-// const managerChoices = employees.map(({ id, first_name, last_name }) => ({
-//     name: `$(first_name) $(last_name)`,
-//     value: id
-// }));
-// managerChoices.unshift({ name: "None, value: null "});
-
-// const { managerId } = inquirer.prompt({
-//     type: "input",
-//     name: "managerId",
-//     message: "Who is the employee's manager?",
-//     choices: managerChoices
-//   });
-
-//   employee.manager_id = managerId;
-
-//   db.createEmployee(employee);
-
-//   console.log(
-//     `Added ${employee.first_name} ${employee.last_name} to the database`
-//   );
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-//     const employees = db.viewAllEmployees();
-// remove employee
-// const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-//     name: `${first_name} ${last_name}`,
-//     value: id
-//   }));
-
-// const { employeeId } = inquirer.prompt([
-// {
-//     type: "list",
-//     name: "employeeId",
-//     message: "Which employee do you want to remove?",
-//     choices: employeeChoices
-// }
-// ]); 
-
-//  db.removeEmployee(employeeId);
-
-// console.log("Removed employee from the database");
-
-// update employee role
-// const employees = db.viewAllEmployees();
-  
-// const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-//   name: `${first_name} ${last_name}`,
-//   value: id
-// }));
-
-// const { employeeId } =inquirer.prompt([
-//   {
-//     type: "list",
-//     name: "employeeId",
-//     message: "Which employee's role do you want to update?",
-//     choices: employeeChoices
-//   }
-// ]);
-
-// const roles = db.findAllRoles();
-
-// const roleChoices = roles.map(({ id, title }) => ({
-//   name: title,
-//   value: id
-// }));
-
-// const { roleId } = inquirer.prompt([
-//   {
-//     type: "list",
-//     name: "roleId",
-//     message: "Which role do you want to assign the selected employee?",
-//     choices: roleChoices
-//   }
-// ]);
-
-// db.updateEmployeeRole(employeeId, roleId);
-
-// console.log("Updated employee's role");
 
 // / >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // let newEmployee = [];
