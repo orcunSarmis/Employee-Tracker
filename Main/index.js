@@ -416,7 +416,24 @@ const updateEmployeeRole = () => {
   }); 
 };
   
+// View All Roles Function
+const viewAllRoles = () => {
+  console.log("\n");
 
+          // console.log(chalk.yellow.bold(`====================================================================================`));
+          // console.log(`                              ` + chalk.green.bold(`Current Employee Roles:`));
+          // console.log(chalk.yellow.bold(`====================================================================================`));
+          console.log(`Current Employee Roles:`);
+          const sql =     `SELECT role.id, role.title, department.name AS department
+                          FROM role
+                          INNER JOIN department ON role.department_id = department.id`;
+          db.query(sql, (error, response) => {
+            if (error) throw error;
+              response.forEach((role) => {console.log(role.title);});
+              // console.log(chalk.yellow.bold(`====================================================================================`));
+              mainMenu();
+          });
+};
 
 mainMenu();
 
