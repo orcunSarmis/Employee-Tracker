@@ -10,9 +10,6 @@ const consoleTable = require('console.table');
 const db = require('../Main/connection');
 
 
-
-
-
 const mainMenu = () => {
     inquirer.prompt(
         {
@@ -87,6 +84,8 @@ const mainMenu = () => {
         })
     // ]);
 };
+
+
 
 // View All Employees Function
 const viewAllEmployees = () => {
@@ -170,121 +169,123 @@ const viewAllEmployeesByManager = () => {
 const addEmployee = () => {
     console.log("\n");
 
-    const employee = inquirer.prompt([
+    inquirer.prompt([
         {
-            type: "input",
-            name: "first_name",
-            message: "What is the employee's first name?"
+          type: 'input',
+          name: 'fistName',
+          message: "What is the employee's first name?",
         },
         {
-            type: "input",
-            name: "last_name",
-            message: "What is the employee's last name?"
+          type: 'input',
+          name: 'lastName',
+          message: "What is the employee's last name?",
         }
-    ]);
-
-    const roleChoices = roles.map(({ id, title }) => ({
-            name: title,
-            value: id
-    }));
-
-    const { roleId } = inquirer.prompt({
-        type: "list",
-        name: "roleId",
-        message: "What is the employee's role?",
-        choices: roleChoices
-    });
-
-    employee.role_id = roleId;
-
-    const managerChoices = employees.map(({ id, first_name, last_name }) => ({
-        name: `$(first_name) $(last_name)`,
-        value: id
-    }));
-    managerChoices.unshift({ name: "None, value: null "});
-
-    const { managerId } = inquirer.prompt({
-        type: "input",
-        name: "managerId",
-        message: "Who is the employee's manager?",
-        choices: managerChoices
+      ])
+        .then(answer => {
+        const crit = [answer.fistName, answer.lastName]
+        const roleSql = `SELECT role.id, role.title FROM role`;
+        db.query(roleSql, (error, data) => {
+          if (error) throw error; 
+          const role = data.map(({ id, title }) => ({ name: title, value: id }));
+          inquirer.prompt([
+                {
+                  type: 'list',
+                  name: 'role',
+                  message: "What is the employee's role?",
+                  choices: role
+                }
+              ])
+                .then(roleChoice => {
+                  const role = roleChoice.role;
+                  crit.push(role);
+                  const managerSql =  `SELECT * FROM employee`;
+                  db.query(managerSql, (error, data) => {
+                    if (error) throw error;
+                    const managers = data.map(({ id, first_name, last_name }) => ({ name: first_name + " " + last_name, value: id }));
+                    inquirer.prompt([
+                      {
+                        type: 'list',
+                        name: 'manager',
+                        message: "Who is the employee's manager?",
+                        choices: managers
+                      }
+                    ])
+                      .then(managerChoice => {
+                        const manager = managerChoice.manager;
+                        crit.push(manager);
+                        const sql =   `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                                      VALUES (?, ?, ?, ?)`;
+                        db.query(sql, crit, (error) => {
+                        if (error) throw error;
+                        console.log("Employee has been added!")
+                        viewAllEmployees();
+                  });
+                });
+              });
+            });
+         });
       });
-    
-      employee.manager_id = managerId;
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // let newEmployee = [];
+    // db.query(`SELECT * FROM employee`, (err, data) => {
+    //     if (err) throw err;
+    //     console.log(data);
+    //     let newEmployee = data.map(n => ({
+    //         name: n.name,
+    //         value: n.id,
+    //     }))
 
-      db.createEmployee(employee);
+    // inquirer
+    // .prompt([
+    // {
+    //     name: `first_name`,
+    //     type: `input`,
+    //     message: `What is the first name of the new employee?`
+    // },
 
-      console.log(
-        `Added ${employee.first_name} ${employee.last_name} to the database`
-      );
+    // {
+    //     name: `last_name`,
+    //     type: `input`,
+    //     message: `What is the last name of the new employee?`
+    // },
+
+    // {
+    //     name: `role_id`,
+    //     type: `input`,
+    //     message: `What role is the new employee in?`,
+    // },
+
+    // {
+    //     name: `manager_id`,
+    //     type: `input`,
+    //     message: `What is the new manager ID of the new employee?`,
+    // }])
+    // .then(answer => {
+    //     const query = `INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
+    //     db.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
+    //         if (err) throw err;
+    //         console.log(answer.first_name, answer.last_name, answer.role_id, answer.manager_id);
+            
+    //     }) 
+
+    //     });
+    // });   
 
       mainMenu();
-
+};
 // Remove Employee Function
 const removeEmployee = () => {
     console.log("\n");
 
-    const employees = db.viewAllEmployees();
 
-    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-        name: `${first_name} ${last_name}`,
-        value: id
-      }));
-
-    const { employeeId } = inquirer.prompt([
-    {
-        type: "list",
-        name: "employeeId",
-        message: "Which employee do you want to remove?",
-        choices: employeeChoices
-    }
-    ]); 
-
-     db.removeEmployee(employeeId);
-
-    console.log("Removed employee from the database");
 
     mainMenu();
 
-}};
+};
 
 // Update Employee Role Function
 async function updateEmployeeRole() {
-    const employees = db.viewAllEmployees();
-  
-    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-      name: `${first_name} ${last_name}`,
-      value: id
-    }));
-  
-    const { employeeId } =inquirer.prompt([
-      {
-        type: "list",
-        name: "employeeId",
-        message: "Which employee's role do you want to update?",
-        choices: employeeChoices
-      }
-    ]);
-  
-    const roles = db.findAllRoles();
-  
-    const roleChoices = roles.map(({ id, title }) => ({
-      name: title,
-      value: id
-    }));
-  
-    const { roleId } = inquirer.prompt([
-      {
-        type: "list",
-        name: "roleId",
-        message: "Which role do you want to assign the selected employee?",
-        choices: roleChoices
-      }
-    ]);
-  
-    db.updateEmployeeRole(employeeId, roleId);
-  
-    console.log("Updated employee's role");
+   
 
 
 }
@@ -318,3 +319,117 @@ mainMenu();
     //     type: `input`,
     //     message: `All Employee`,
     // }).then((answer) => {
+
+    // findAllRoles() {
+//     return this.connection.query(
+//       "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
+//     );
+//   }
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// add employeefunc
+// const employee = inquirer.prompt([
+//     {
+//         type: "input",
+//         name: "first_name",
+//         message: "What is the employee's first name?"
+//     },
+//     {
+//         type: "input",
+//         name: "last_name",
+//         message: "What is the employee's last name?"
+//     }
+// ]);
+
+// const roleChoices = roles.map(({ id, title }) => ({
+//         name: title,
+//         value: id
+// }));
+
+// const { roleId } = inquirer.prompt({
+//     type: "list",
+//     name: "roleId",
+//     message: "What is the employee's role?",
+//     choices: roleChoices
+// });
+
+// employee.role_id = roleId;
+
+// const managerChoices = employees.map(({ id, first_name, last_name }) => ({
+//     name: `$(first_name) $(last_name)`,
+//     value: id
+// }));
+// managerChoices.unshift({ name: "None, value: null "});
+
+// const { managerId } = inquirer.prompt({
+//     type: "input",
+//     name: "managerId",
+//     message: "Who is the employee's manager?",
+//     choices: managerChoices
+//   });
+
+//   employee.manager_id = managerId;
+
+//   db.createEmployee(employee);
+
+//   console.log(
+//     `Added ${employee.first_name} ${employee.last_name} to the database`
+//   );
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+//     const employees = db.viewAllEmployees();
+// remove employee
+// const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+//     name: `${first_name} ${last_name}`,
+//     value: id
+//   }));
+
+// const { employeeId } = inquirer.prompt([
+// {
+//     type: "list",
+//     name: "employeeId",
+//     message: "Which employee do you want to remove?",
+//     choices: employeeChoices
+// }
+// ]); 
+
+//  db.removeEmployee(employeeId);
+
+// console.log("Removed employee from the database");
+
+// update employee role
+// const employees = db.viewAllEmployees();
+  
+// const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+//   name: `${first_name} ${last_name}`,
+//   value: id
+// }));
+
+// const { employeeId } =inquirer.prompt([
+//   {
+//     type: "list",
+//     name: "employeeId",
+//     message: "Which employee's role do you want to update?",
+//     choices: employeeChoices
+//   }
+// ]);
+
+// const roles = db.findAllRoles();
+
+// const roleChoices = roles.map(({ id, title }) => ({
+//   name: title,
+//   value: id
+// }));
+
+// const { roleId } = inquirer.prompt([
+//   {
+//     type: "list",
+//     name: "roleId",
+//     message: "Which role do you want to assign the selected employee?",
+//     choices: roleChoices
+//   }
+// ]);
+
+// db.updateEmployeeRole(employeeId, roleId);
+
+// console.log("Updated employee's role");
