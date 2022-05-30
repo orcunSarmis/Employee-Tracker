@@ -224,7 +224,7 @@ const addEmployee = () => {
 const removeEmployee = () => {
     console.log("\n");
 
-    const employees = db.findAllEmployees();
+    const employees = db.viewAllEmployees();
 
     const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
         name: `${first_name} ${last_name}`,
@@ -246,7 +246,45 @@ const removeEmployee = () => {
 
     mainMenu();
 
-}
+}};
+
+// Update Employee Role Function
+async function updateEmployeeRole() {
+    const employees = db.viewAllEmployees();
+  
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id
+    }));
+  
+    const { employeeId } =inquirer.prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "Which employee's role do you want to update?",
+        choices: employeeChoices
+      }
+    ]);
+  
+    const roles = db.findAllRoles();
+  
+    const roleChoices = roles.map(({ id, title }) => ({
+      name: title,
+      value: id
+    }));
+  
+    const { roleId } = inquirer.prompt([
+      {
+        type: "list",
+        name: "roleId",
+        message: "Which role do you want to assign the selected employee?",
+        choices: roleChoices
+      }
+    ]);
+  
+    db.updateEmployeeRole(employeeId, roleId);
+  
+    console.log("Updated employee's role");
 
 
 }
