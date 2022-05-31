@@ -435,6 +435,216 @@ const viewAllRoles = () => {
           });
 };
 
+// Add a New Role Function
+const addRole = () => {
+  console.log("\n");
+
+  const sql = 'SELECT * FROM department'
+  db.query(sql, (error, response) => {
+      if (error) throw error;
+      let deptNamesArray = [];
+      response.forEach((department) => {deptNamesArray.push(department.department_name);});
+      deptNamesArray.push('Create Department');
+      inquirer
+        .prompt([
+          {
+            name: 'departmentName',
+            type: 'list',
+            message: 'Which department is this new role in?',
+            choices: deptNamesArray
+          }
+        ])
+        .then((answer) => {
+          if (answer.departmentName === 'Create Department') {
+            this.addDepartment();
+          } else {
+            addRoleResume(answer);
+          }
+        });
+
+      const addRoleResume = (departmentData) => {
+        inquirer
+          .prompt([
+            {
+              name: 'newRole',
+              type: 'input',
+              message: 'What is the name of your new role?',
+              // validate: validate.validateString
+            },
+            {
+              name: 'salary',
+              type: 'input',
+              message: 'What is the salary of this new role?',
+              // validate: validate.validateSalary
+            }
+          ])
+          .then((answer) => {
+            let createdRole = answer.newRole;
+            let departmentId;
+
+            response.forEach((department) => {
+              if (departmentData.departmentName === department.department_name) {departmentId = department.id;}
+            });
+
+            let sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
+            let crit = [createdRole, answer.salary, departmentId];
+
+            db.query(sql, crit, (error) => {
+              if (error) throw error;
+              console.log(`Role successfully created!`);
+              // console.log(chalk.yellow.bold(`====================================================================================`));
+              // console.log(chalk.greenBright(`Role successfully created!`));
+              // console.log(chalk.yellow.bold(`====================================================================================`));
+              viewAllRoles();
+            });
+          });
+      };
+    });
+};
+
+
+// Remove a Role Function
+const removeRole = () => {
+  console.log("\n");
+
+  let sql = `SELECT role.id, role.title FROM role`;
+
+    db.query(sql, (error, response) => {
+      if (error) throw error;
+      let roleNamesArray = [];
+      response.forEach((role) => {roleNamesArray.push(role.title);});
+
+      inquirer
+        .prompt([
+          {
+            name: 'chosenRole',
+            type: 'list',
+            message: 'Which role would you like to remove?',
+            choices: roleNamesArray
+          }
+        ])
+        .then((answer) => {
+          let roleId;
+
+          response.forEach((role) => {
+            if (answer.chosenRole === role.title) {
+              roleId = role.id;
+            }
+          });
+
+          let sql =   `DELETE FROM role WHERE role.id = ?`;
+          db.query(sql, [roleId], (error) => {
+            if (error) throw error;
+            console.log(`Role Successfully Removed`);
+            // console.log(chalk.redBright.bold(`====================================================================================`));
+            // console.log(chalk.greenBright(`Role Successfully Removed`));
+            // console.log(chalk.redBright.bold(`====================================================================================`));
+            viewAllRoles();
+          });
+        });
+    });
+  };
+
+// View all Departments Function
+const viewAllDepartments = () => {
+  const sql =   `SELECT department.id AS id, department.name AS department FROM department`; 
+  db.query(sql, (error, response) => {
+    if (error) throw error;
+    console.table(response);
+    // console.log(chalk.yellow.bold(`====================================================================================`));
+    // console.log(`                              ` + chalk.green.bold(`All Departments:`));
+    // console.log(chalk.yellow.bold(`====================================================================================`));
+    // console.table(response);
+    // console.log(chalk.yellow.bold(`====================================================================================`));
+    mainMenu();
+  });
+};
+
+// Add a New Department
+const addDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        name: 'newDepartment',
+        type: 'input',
+        message: 'What is the name of your new Department?',
+        validate: validate.validateString
+      }
+    ])
+    .then((answer) => {
+      let sql =     `INSERT INTO department (department_name) VALUES (?)`;
+      connection.query(sql, answer.newDepartment, (error, response) => {
+        if (error) throw error;
+        console.log(``);
+        console.log(chalk.greenBright(answer.newDepartment + ` Department successfully created!`));
+        console.log(``);
+        viewAllDepartments();
+      });
+    });
+};
+
+
+// Remove a Department Function
+const removeDepartment = () => {
+  console.log("\n");
+
+    let sql =   `SELECT department.id, department.department_name FROM department`;
+    db.query(sql, (error, response) => {
+      if (error) throw error;
+      let departmentNamesArray = [];
+      response.forEach((department) => {departmentNamesArray.push(department.department_name);});
+
+      inquirer
+        .prompt([
+          {
+            name: 'chosenDept',
+            type: 'list',
+            message: 'Which department would you like to remove?',
+            choices: departmentNamesArray
+          }
+        ])
+        .then((answer) => {
+          let departmentId;
+
+          response.forEach((department) => {
+            if (answer.chosenDept === department.department_name) {
+              departmentId = department.id;
+            }
+          });
+
+          let sql =     `DELETE FROM department WHERE department.id = ?`;
+          db.query(sql, [departmentId], (error) => {
+            if (error) throw error;
+            console.log(`Department Successfully Removed`);
+            // console.log(chalk.redBright.bold(`====================================================================================`));
+            // console.log(chalk.redBright(`Department Successfully Removed`));
+            // console.log(chalk.redBright.bold(`====================================================================================`));
+            viewAllDepartments();
+          });
+        });
+    });
+}; 
+
+// View The Total Utilized Budget By Department Function
+const viewTotalBudget = () => {
+  console.log("\n");
+
+  // console.log(chalk.yellow.bold(`====================================================================================`));
+  // console.log(`                              ` + chalk.green.bold(`Budget By Department:`));
+  // console.log(chalk.yellow.bold(`====================================================================================`));
+  const sql =     `SELECT department_id AS id, 
+                  department.name AS department,
+                  SUM(salary) AS budget
+                  FROM  role  
+                  INNER JOIN department ON role.department_id = department.id GROUP BY  role.department_id`;
+  db.query(sql, (error, response) => {
+    if (error) throw error;
+      console.table(response);
+      // console.log(chalk.yellow.bold(`====================================================================================`));
+      mainMenu();
+  });
+};
+
 mainMenu();
 
 // _____________________________________________________________________________________
