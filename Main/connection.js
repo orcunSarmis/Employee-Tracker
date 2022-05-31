@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-
+// import chalk from 'chalk';
 // Connect to database
 const db = mysql.createConnection(
     {
@@ -16,7 +16,7 @@ const db = mysql.createConnection(
 //     if (err) throw error;
 //     console.log(`Connected to the employees_db database.`);
 
-//     console.log(chalk.yellow.bold(`====================================================================================`));
+    // console.log(chalk.yellow.bold(`====================================================================================`));
 //     console.log(``);
 //     console.log(chalk.greenBright.bold(figlet.textSync('Employee Tracker')));
 //     console.log(``);
