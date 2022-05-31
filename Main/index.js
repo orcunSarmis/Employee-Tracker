@@ -135,7 +135,7 @@ const viewAllEmployeesByDepartment = () => {
 
 // View All Employees By Manager Function
 const viewAllEmployeesByManager = () => {
-    const managers = db.viewAllEmployees();
+    const managers = viewAllEmployees();
     console.log("\n");
 
     const managerChoices = managers.map(({ id, first_name, last_name }) => ({
@@ -231,6 +231,7 @@ const addEmployee = () => {
 
     //   mainMenu();
 };
+
 // Remove Employee Function
 const removeEmployee = () => {
     console.log("\n");
@@ -442,7 +443,7 @@ const addRole = () => {
   const sql = 'SELECT * FROM department'
   db.query(sql, (error, response) => {
       if (error) throw error;
-      let deptNamesArray = [];
+      let deptNamesArray  = [];
       response.forEach((department) => {deptNamesArray.push(department.name);});
       deptNamesArray.push('Create Department');
       inquirer
@@ -455,7 +456,7 @@ const addRole = () => {
           }
         ])
         .then((answer) => {
-          if (answer.departmentName === 'Create Department') {
+          if (answer.departmentName  === 'Create Department') {
             addDepartment();
           } else {
             addRoleResume(answer);
@@ -469,13 +470,11 @@ const addRole = () => {
               name: 'newRole',
               type: 'input',
               message: 'What is the name of your new role?',
-              // validate: validate.validateString
             },
             {
               name: 'salary',
               type: 'input',
               message: 'What is the salary of this new role?',
-              // validate: validate.validateSalary
             }
           ])
           .then((answer) => {
@@ -483,7 +482,7 @@ const addRole = () => {
             let departmentId;
 
             response.forEach((department) => {
-              if (departmentData.departmentName === department.name) {departmentId = department.id;}
+              if (departmentData.departmentName  === department.name) {departmentId = department.id;}
             });
 
             let sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
@@ -596,7 +595,7 @@ const removeDepartment = () => {
     db.query(sql, (error, response) => {
       if (error) throw error;
       let departmentNamesArray = [];
-      response.forEach((department) => {departmentNamesArray.push(department.department_name);});
+      response.forEach((department) => {departmentNamesArray.push(department.name);});
 
       inquirer
         .prompt([
@@ -611,7 +610,7 @@ const removeDepartment = () => {
           let departmentId;
 
           response.forEach((department) => {
-            if (answer.chosenDept === department.department_name) {
+            if (answer.chosenDept === department.name) {
               departmentId = department.id;
             }
           });
@@ -651,84 +650,4 @@ const viewTotalBudget = () => {
 
 mainMenu();
 
-// _____________________________________________________________________________________
-// try for View All Employees By Department
-// SELECT department.id, department.name, SUM (role.salary) AS utilized_budget FROM employee LEFT JOIN 
-//     role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id GROUP BY department.id, department.name
 
-
-// View All Employees By Department Same but not works well
-// SELECT 
-//     employee.first_name AS First, 
-//     employee.last_name AS Last, 
-//     role.title AS Title, 
-//     role.salary AS Salary, 
-//     department.name AS Department, 
-//     CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee 
-//     INNER JOIN role on role.id = employee.role_id 
-//     INNER JOIN department 
-//     on department.id = role.department_id 
-//     LEFT JOIN employee e 
-//     on employee.manager_id = e.id
-//     ORDER BY Department
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // inquirer
-    // .prompt({
-    //     name: `employee`,
-    //     type: `input`,
-    //     message: `All Employee`,
-    // }).then((answer) => {
-
-    // findAllRoles() {
-//     return this.connection.query(
-//       "SELECT role.id, role.title, department.name AS department, role.salary FROM role LEFT JOIN department on role.department_id = department.id;"
-//     );
-//   }
-
-
-
-// / >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    // let newEmployee = [];
-    // db.query(`SELECT * FROM employee`, (err, data) => {
-    //     if (err) throw err;
-    //     console.log(data);
-    //     let newEmployee = data.map(n => ({
-    //         name: n.name,
-    //         value: n.id,
-    //     }))
-
-    // inquirer
-    // .prompt([
-    // {
-    //     name: `first_name`,
-    //     type: `input`,
-    //     message: `What is the first name of the new employee?`
-    // },
-
-    // {
-    //     name: `last_name`,
-    //     type: `input`,
-    //     message: `What is the last name of the new employee?`
-    // },
-
-    // {
-    //     name: `role_id`,
-    //     type: `input`,
-    //     message: `What role is the new employee in?`,
-    // },
-
-    // {
-    //     name: `manager_id`,
-    //     type: `input`,
-    //     message: `What is the new manager ID of the new employee?`,
-    // }])
-    // .then(answer => {
-    //     const query = `INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
-    //     db.query(query, [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], (err, res) => {
-    //         if (err) throw err;
-    //         console.log(answer.first_name, answer.last_name, answer.role_id, answer.manager_id);
-            
-    //     }) 
-
-    //     });
-    // }); 
