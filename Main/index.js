@@ -443,7 +443,7 @@ const addRole = () => {
   db.query(sql, (error, response) => {
       if (error) throw error;
       let deptNamesArray = [];
-      response.forEach((department) => {deptNamesArray.push(department.department_name);});
+      response.forEach((department) => {deptNamesArray.push(department.name);});
       deptNamesArray.push('Create Department');
       inquirer
         .prompt([
@@ -456,7 +456,7 @@ const addRole = () => {
         ])
         .then((answer) => {
           if (answer.departmentName === 'Create Department') {
-            this.addDepartment();
+            addDepartment();
           } else {
             addRoleResume(answer);
           }
@@ -483,7 +483,7 @@ const addRole = () => {
             let departmentId;
 
             response.forEach((department) => {
-              if (departmentData.departmentName === department.department_name) {departmentId = department.id;}
+              if (departmentData.departmentName === department.name) {departmentId = department.id;}
             });
 
             let sql =   `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
@@ -562,22 +562,26 @@ const viewAllDepartments = () => {
 
 // Add a New Department
 const addDepartment = () => {
+  console.log("\n");
+
   inquirer
     .prompt([
       {
         name: 'newDepartment',
         type: 'input',
         message: 'What is the name of your new Department?',
-        validate: validate.validateString
+        // validate: validate.validateString
       }
     ])
     .then((answer) => {
-      let sql =     `INSERT INTO department (department_name) VALUES (?)`;
-      connection.query(sql, answer.newDepartment, (error, response) => {
+      let sql =     `INSERT INTO department (name) VALUES (?)`;
+      db.query(sql, answer.newDepartment, (error, response) => {
         if (error) throw error;
-        console.log(``);
-        console.log(chalk.greenBright(answer.newDepartment + ` Department successfully created!`));
-        console.log(``);
+        console.log(answer.newDepartment + `Department successfully created!`)
+
+        // console.log(``);
+        // console.log(chalk.greenBright(answer.newDepartment + ` Department successfully created!`));
+        // console.log(``);
         viewAllDepartments();
       });
     });
@@ -588,7 +592,7 @@ const addDepartment = () => {
 const removeDepartment = () => {
   console.log("\n");
 
-    let sql =   `SELECT department.id, department.department_name FROM department`;
+    let sql =   `SELECT department.id, department.name FROM department`;
     db.query(sql, (error, response) => {
       if (error) throw error;
       let departmentNamesArray = [];
