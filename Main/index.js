@@ -135,32 +135,43 @@ const viewAllEmployeesByDepartment = () => {
 
 // View All Employees By Manager Function
 const viewAllEmployeesByManager = () => {
-    const managers = viewAllEmployees();
+    
     console.log("\n");
 
-    const managerChoices = managers.map(({ id, first_name, last_name }) => ({
-        name: `${first_name} ${last_name}`,
-        value: id
-      }));
-
-    const { managerId } = inquirer.prompt([
-        {
-        type: "list",
-        name: "managerId",
-        message: "Which employee do you want to see direct reports for?",
-        choices: managerChoices
-        }
-    ]);
-    // let managerId = 1;
     const query = `SELECT employee.id, employee.first_name, 
     employee.last_name, department.name AS department, 
     role.title FROM employee LEFT JOIN role on role.id = 
     employee.role_id LEFT JOIN department ON department.id = 
-    role.department_id WHERE manager_id = ?`;
-    db.query(query, managerId, (err, res) => {
+    role.department_id WHERE manager_id`;
+    db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
         console.log("\n");
+
+        // const managers = viewAllEmployees();
+    // const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+    //     name: `${first_name} ${last_name}`,
+    //     value: id
+    //   }));
+
+    // const { managerId } = inquirer.prompt([
+    //     {
+    //     type: "list",
+    //     name: "managerId",
+    //     message: "Which employee do you want to see direct reports for?",
+    //     choices: managerChoices
+    //     }
+    // ]);
+    // // let managerId = 1;
+    // const query = `SELECT employee.id, employee.first_name, 
+    // employee.last_name, department.name AS department, 
+    // role.title FROM employee LEFT JOIN role on role.id = 
+    // employee.role_id LEFT JOIN department ON department.id = 
+    // role.department_id WHERE manager_id = ?`;
+    // db.query(query, managerId, (err, res) => {
+    //     if (err) throw err;
+    //     console.table(res);
+    //     console.log("\n");
 
         mainMenu();
     });
