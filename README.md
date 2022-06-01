@@ -5,7 +5,10 @@
   ## Description 
   
   A node.js application that uses user input from inquirer to populate an employee tracker database displaying members of a company.
+  
+  ![first](https://user-images.githubusercontent.com/79064464/171373615-ce49920d-ebe4-4ab6-8ff1-bc46761cf81d.png)
 
+  
   ## Table of Content
 
   * [Usage](#usage)
