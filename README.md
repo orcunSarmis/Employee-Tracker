@@ -10,9 +10,13 @@
   
   ![first](https://user-images.githubusercontent.com/79064464/171375185-5b6a3291-b23a-49c8-b775-36f8480624db.png)
   
-  Update Employee Manager
+  Update Employee Manager Function
   
   ![second](https://user-images.githubusercontent.com/79064464/171376140-b21c88a0-aa4b-4e33-a0fa-817f52e7a497.png)
+  
+  View The Total Utilized Budget By Department Function
+  
+  ![third](https://user-images.githubusercontent.com/79064464/171385418-6b9c2946-20fe-4d22-8270-990c3b49e091.png)
 
   ## Table of Content
 
