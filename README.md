@@ -46,7 +46,7 @@
  
   ## Tests
 
-  To run tests, run the following command:
+  No testing is currently set up.
   
   ## License
 
