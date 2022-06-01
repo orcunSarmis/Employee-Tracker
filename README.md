@@ -18,7 +18,12 @@
   ## Usage
 
   Clone the repo first and run the following command at the root of your project and answer the prompted questions:
-
+  https://github.com/orcunSarmis/Employee-Tracker
+  ```
+  npm start
+  ```
+  Click on the link below to see a demo of the application:
+  
   ## Contributing
 
   Ideas to improve this application are welcome, email me please.
@@ -27,14 +32,23 @@
 
   To install necessary dependencies, run the following command:
   ```
-  To install necessary dependencies, run the following command:
+  npm init
   ```
+  ```
+  npm install inquirer
+  ```
+  ```
+  npm install mysql2
+  ```
+  ```
+  npm install console-table
+  ```
+  ```
+  
   ## Tests
 
   To run tests, run the following command:
-  ```
-  No testing is currently set up
-  ```
+  
   ## License
 
    This project is licensed under the [APACHE 2.0](https://www.apache.org/licenses/LICENSE-2.0) license. 
