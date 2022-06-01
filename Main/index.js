@@ -335,8 +335,8 @@ const updateEmployeeRole = () => {
             (error) => {
             if (error) throw error;
             console.log(`Employee Role Updated`);
-            viewAllRoles();
-            mainMenu();
+            viewAllEmployees();
+            // mainMenu();
             // console.log(chalk.greenBright.bold(`====================================================================================`));
             // console.log(chalk.greenBright(`Employee Role Updated`));
             // console.log(chalk.greenBright.bold(`====================================================================================`));
@@ -389,7 +389,7 @@ const updateEmployeeRole = () => {
                 }
             });
 
-            if (answer.chosenEmployee, answer.newManager) {
+            if (answer.chosenEmployee == answer.newManager) {
               console.log(`Invalid Manager Selection`);
             // console.log(chalk.redBright.bold(`====================================================================================`));
             // console.log(chalk.redBright(`Invalid Manager Selection`));
@@ -407,7 +407,8 @@ const updateEmployeeRole = () => {
             // console.log(chalk.greenBright.bold(`====================================================================================`));
             // console.log(chalk.greenBright(`Employee Manager Updated`));
             // console.log(chalk.greenBright.bold(`====================================================================================`));
-            mainMenu();
+            // mainMenu();
+            viewAllEmployees();
             }
         );
       }
