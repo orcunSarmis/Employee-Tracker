@@ -2,6 +2,8 @@
 //  Import and require mysql2
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+const dotenv = require('dotenv')
+dotenv.config()
 // import chalk from 'chalk';
 const figlet = require('figlet');
 // const chalk = require('chalk');
@@ -138,40 +140,22 @@ const viewAllEmployeesByManager = () => {
     
     console.log("\n");
 
-    const query = `SELECT employee.id, employee.first_name, 
-    employee.last_name, department.name AS department, 
-    role.title FROM employee LEFT JOIN role on role.id = 
-    employee.role_id LEFT JOIN department ON department.id = 
-    role.department_id WHERE manager_id`;
+    const query = `SELECT 
+    employee.first_name AS First, 
+    employee.last_name AS Last, 
+    role.title AS Title,  
+    department.name AS Department, 
+    CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee 
+    INNER JOIN role on role.id = employee.role_id 
+    INNER JOIN department 
+    on department.id = role.department_id 
+    LEFT JOIN employee e 
+    on employee.manager_id = e.id
+    ORDER BY Manager DESC`;
     db.query(query, (err, res) => {
         if (err) throw err;
         console.table(res);
         console.log("\n");
-
-        // const managers = viewAllEmployees();
-    // const managerChoices = managers.map(({ id, first_name, last_name }) => ({
-    //     name: `${first_name} ${last_name}`,
-    //     value: id
-    //   }));
-
-    // const { managerId } = inquirer.prompt([
-    //     {
-    //     type: "list",
-    //     name: "managerId",
-    //     message: "Which employee do you want to see direct reports for?",
-    //     choices: managerChoices
-    //     }
-    // ]);
-    // // let managerId = 1;
-    // const query = `SELECT employee.id, employee.first_name, 
-    // employee.last_name, department.name AS department, 
-    // role.title FROM employee LEFT JOIN role on role.id = 
-    // employee.role_id LEFT JOIN department ON department.id = 
-    // role.department_id WHERE manager_id = ?`;
-    // db.query(query, managerId, (err, res) => {
-    //     if (err) throw err;
-    //     console.table(res);
-    //     console.log("\n");
 
         mainMenu();
     });
