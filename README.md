@@ -29,12 +29,12 @@
 
   ## Usage
 
-  Clone the repo first and run the following command at the root of your project and answer the prompted questions:
-  https://github.com/orcunSarmis/Employee-Tracker
+  Clone my [GitHub](https://github.com/orcunSarmis/Employee-Tracker) repo first and run the following command at the root of your project and answer the prompted questions:
+  
   ```
   npm start
   ```
-  Click on the link below to see a demo of the application: [here](https://drive.google.com/file/d/10fgHbtFOY3-HBWs1oSt9bkB8RpTLxuk8/view?usp=sharing)
+  Use this [Walkthrough ](https://drive.google.com/file/d/10fgHbtFOY3-HBWs1oSt9bkB8RpTLxuk8/view?usp=sharing) video as a guide for using this application.
   
   ## Contributing
 
