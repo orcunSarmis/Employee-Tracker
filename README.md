@@ -66,4 +66,4 @@
 
   ## Questions
 
-  If you have any questions about the repo, open an issue or contact me directly at yorcunsarmis@gmail.com. You can find more of my work at [orcunSarmis](https://github.com/orcunSarmis/).
+  If you have any questions about the repo, open an issue or contact me directly at yorcunsarmis@gmail.com. You can find more of my work at my [GitHub](https://github.com/orcunSarmis/)page.
