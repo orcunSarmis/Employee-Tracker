@@ -4,14 +4,11 @@ const mysql = require('mysql2');
 const inquirer = require('inquirer');
 const dotenv = require('dotenv')
 dotenv.config()
-// import chalk from 'chalk';
-const figlet = require('figlet');
-// const chalk = require('chalk');
 // Import and require console.table
 const consoleTable = require('console.table');
 const db = require('../Main/connection');
 
-
+// Main function of netrence of the app
 const mainMenu = () => {
   console.log("\n");
     inquirer.prompt(
@@ -82,12 +79,10 @@ const mainMenu = () => {
                     break;
                 default:
                     return quit();    
-                // case `Quit`:
-                //     quit();
-                //     break;
+
             }
         })
-    // ]);
+
 };
 
 
@@ -108,14 +103,9 @@ const viewAllEmployees = () => {
         console.log("\n");
 
         mainMenu();
-        // console.log(chalk.yellow.bold(`====================================================================================`));
-        // console.log(`                              ` + chalk.green.bold(`Current Employees:`));
-        // console.log(chalk.yellow.bold(`====================================================================================`));
-        // console.table(res);
-        // console.log(chalk.yellow.bold(`====================================================================================`));
+
     });
-    // mainMenu();
-    // });
+
 };
 
 // View All Employees By Department Function
@@ -135,7 +125,6 @@ const viewAllEmployeesByDepartment = () => {
         mainMenu();
     });
 };
-    // mainMenu();
 
 // View All Employees By Manager Function
 const viewAllEmployeesByManager = () => {
@@ -226,7 +215,6 @@ const addEmployee = () => {
          });
       }); 
 
-    //   mainMenu();
 };
 
 // Remove Employee Function
@@ -265,15 +253,12 @@ const removeEmployee = () => {
           db.query(sql, [employeeId], (error) => {
             if (error) throw error;
             console.log("Employee Successfully Removed");
-            // console.log(chalk.redBright.bold(`====================================================================================`));
-            // console.log(chalk.redBright(`Employee Successfully Removed`));
-            // console.log(chalk.RedBright.bold(`====================================================================================`));
+
             viewAllEmployees();
           });
         });
     });
 
-    mainMenu();
 
 };
 
@@ -336,10 +321,6 @@ const updateEmployeeRole = () => {
             if (error) throw error;
             console.log(`Employee Role Updated`);
             viewAllEmployees();
-            // mainMenu();
-            // console.log(chalk.greenBright.bold(`====================================================================================`));
-            // console.log(chalk.greenBright(`Employee Role Updated`));
-            // console.log(chalk.greenBright.bold(`====================================================================================`));
         
         }
         );
@@ -391,9 +372,7 @@ const updateEmployeeRole = () => {
 
             if (answer.chosenEmployee == answer.newManager) {
               console.log(`Invalid Manager Selection`);
-            // console.log(chalk.redBright.bold(`====================================================================================`));
-            // console.log(chalk.redBright(`Invalid Manager Selection`));
-            // console.log(chalk.redBright.bold(`====================================================================================`));
+
             mainMenu();
             } else {
             let sql = `UPDATE employee SET employee.manager_id = ? WHERE employee.id = ?`;
@@ -404,10 +383,7 @@ const updateEmployeeRole = () => {
             (error) => {
             if (error) throw error;
             console.log(`Employee Manager Updated`);
-            // console.log(chalk.greenBright.bold(`====================================================================================`));
-            // console.log(chalk.greenBright(`Employee Manager Updated`));
-            // console.log(chalk.greenBright.bold(`====================================================================================`));
-            // mainMenu();
+
             viewAllEmployees();
             }
         );
@@ -420,9 +396,6 @@ const updateEmployeeRole = () => {
 const viewAllRoles = () => {
   console.log("\n");
 
-          // console.log(chalk.yellow.bold(`====================================================================================`));
-          // console.log(`                              ` + chalk.green.bold(`Current Employee Roles:`));
-          // console.log(chalk.yellow.bold(`====================================================================================`));
           console.log(`Current Employee Roles:`);
           const sql =     `SELECT role.id, role.title, department.name AS department
                           FROM role
@@ -430,7 +403,6 @@ const viewAllRoles = () => {
           db.query(sql, (error, response) => {
             if (error) throw error;
               response.forEach((role) => {console.log(role.title);});
-              // console.log(chalk.yellow.bold(`====================================================================================`));
               mainMenu();
           });
 };
@@ -490,9 +462,6 @@ const addRole = () => {
             db.query(sql, crit, (error) => {
               if (error) throw error;
               console.log(`Role successfully created!`);
-              // console.log(chalk.yellow.bold(`====================================================================================`));
-              // console.log(chalk.greenBright(`Role successfully created!`));
-              // console.log(chalk.yellow.bold(`====================================================================================`));
               viewAllRoles();
             });
           });
@@ -534,9 +503,6 @@ const removeRole = () => {
           db.query(sql, [roleId], (error) => {
             if (error) throw error;
             console.log(`Role Successfully Removed`);
-            // console.log(chalk.redBright.bold(`====================================================================================`));
-            // console.log(chalk.greenBright(`Role Successfully Removed`));
-            // console.log(chalk.redBright.bold(`====================================================================================`));
             viewAllRoles();
           });
         });
@@ -549,11 +515,6 @@ const viewAllDepartments = () => {
   db.query(sql, (error, response) => {
     if (error) throw error;
     console.table(response);
-    // console.log(chalk.yellow.bold(`====================================================================================`));
-    // console.log(`                              ` + chalk.green.bold(`All Departments:`));
-    // console.log(chalk.yellow.bold(`====================================================================================`));
-    // console.table(response);
-    // console.log(chalk.yellow.bold(`====================================================================================`));
     mainMenu();
   });
 };
@@ -568,7 +529,6 @@ const addDepartment = () => {
         name: 'newDepartment',
         type: 'input',
         message: 'What is the name of your new Department?',
-        // validate: validate.validateString
       }
     ])
     .then((answer) => {
@@ -576,10 +536,6 @@ const addDepartment = () => {
       db.query(sql, answer.newDepartment, (error, response) => {
         if (error) throw error;
         console.log(answer.newDepartment + `Department successfully created!`)
-
-        // console.log(``);
-        // console.log(chalk.greenBright(answer.newDepartment + ` Department successfully created!`));
-        // console.log(``);
         viewAllDepartments();
       });
     });
@@ -618,9 +574,6 @@ const removeDepartment = () => {
           db.query(sql, [departmentId], (error) => {
             if (error) throw error;
             console.log(`Department Successfully Removed`);
-            // console.log(chalk.redBright.bold(`====================================================================================`));
-            // console.log(chalk.redBright(`Department Successfully Removed`));
-            // console.log(chalk.redBright.bold(`====================================================================================`));
             viewAllDepartments();
           });
         });
@@ -631,9 +584,6 @@ const removeDepartment = () => {
 const viewTotalBudget = () => {
   console.log("\n");
 
-  // console.log(chalk.yellow.bold(`====================================================================================`));
-  // console.log(`                              ` + chalk.green.bold(`Budget By Department:`));
-  // console.log(chalk.yellow.bold(`====================================================================================`));
   const sql =     `SELECT department_id AS id, 
                   department.name AS department,
                   SUM(salary) AS budget
@@ -642,7 +592,6 @@ const viewTotalBudget = () => {
   db.query(sql, (error, response) => {
     if (error) throw error;
       console.table(response);
-      // console.log(chalk.yellow.bold(`====================================================================================`));
       mainMenu();
   });
 };
