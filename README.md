@@ -43,8 +43,7 @@
   ```
   npm install console-table
   ```
-  ```
-  
+ 
   ## Tests
 
   To run tests, run the following command:
