@@ -80,9 +80,11 @@ const mainMenu = () => {
                 case `View The Total Utilized Budget By Department`:
                     viewTotalBudget();
                     break;
-                case `Quit`:
-                    quit();
-                    break;
+                default:
+                    return quit();    
+                // case `Quit`:
+                //     quit();
+                //     break;
             }
         })
     // ]);
@@ -333,6 +335,7 @@ const updateEmployeeRole = () => {
             (error) => {
             if (error) throw error;
             console.log(`Employee Role Updated`);
+            viewAllRoles();
             mainMenu();
             // console.log(chalk.greenBright.bold(`====================================================================================`));
             // console.log(chalk.greenBright(`Employee Role Updated`));
@@ -386,7 +389,7 @@ const updateEmployeeRole = () => {
                 }
             });
 
-            if (isSame(answer.chosenEmployee, answer.newManager)) {
+            if (answer.chosenEmployee, answer.newManager) {
               console.log(`Invalid Manager Selection`);
             // console.log(chalk.redBright.bold(`====================================================================================`));
             // console.log(chalk.redBright(`Invalid Manager Selection`));
@@ -643,6 +646,10 @@ const viewTotalBudget = () => {
   });
 };
 
+function quit() {
+  console.log("Goodbye!");
+  process.exit();
+}
 mainMenu();
 
 
